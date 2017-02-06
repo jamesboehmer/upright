@@ -1,0 +1,6 @@
+.pycharm_helpers
+helpers
+.idea
+
+**/__pycache__
+

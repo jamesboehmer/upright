@@ -1,0 +1,8 @@
+FROM upright-dev
+
+RUN apk add python3-dev=3.5.2-r9
+RUN apk add build-base
+
+# Be sure to cp -r /Applications/PyCharm 3.app/Contents/helpers ./.pycharm_helpers
+ADD .pycharm_helpers /opt/.pycharm_helpers
+RUN "/usr/bin/python3" "/opt/.pycharm_helpers/pydev/setup_cython.py" build_ext --inplace
