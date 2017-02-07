@@ -92,6 +92,7 @@ class Bot(object):
                 "fields": [
                     {
                         "title": "Channel",
+                        # TODO: Figure out why this doesn't render as a link in the channel
                         "value": '<#{}|{}>'.format(self.channel_name_to_id(team['channel']), team['channel']),
                         "short": True
                     },
@@ -118,9 +119,9 @@ class Bot(object):
 
     def do_help(self, _, _event):
         logger.debug('Command: help')
-        self.slack_client.api_call("chat.postMessage", channel=_event.get('channel'),
-                                   text="*Commands*:```help: \tShow this message\nteams:\tList all teams```",
-                                   as_user=True, reply_broadcast=False)
+        self.slack_client.rtm_send_message(channel=_event.get('channel'),
+                                           message="*Commands*:```help: \tShow this message\nteams:\tList all teams```",
+                                           reply_broadcast=False)
 
     def handle_command(self, _command, _event):
         commands = {
@@ -157,7 +158,7 @@ class Bot(object):
                         if command and event:
                             self.handle_command(command, event)
                     time.sleep(READ_WEBSOCKET_DELAY)
-                except ConnectionResetError as cre:
+                except ConnectionResetError as _:
                     self.slack_client.rtm_connect()
         else:
             logger.error("Connection failed. Invalid Slack token or bot ID?")
